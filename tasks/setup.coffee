@@ -11,7 +11,7 @@ module.exports = (grunt) ->
       """
       #!/usr/bin/env coffee
 
-      NodeTemplate = require("../lib/node-template")
+      Stencil = require("../lib/stencil")
       """
     )
   )

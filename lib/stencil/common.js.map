@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "common.js",
+  "sourceRoot": "../../src/stencil/",
+  "sources": [
+    "common.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;CAAA,KAAA;;CAAA,CAAA,CACE,GADF;CACE,CAAG,CAAA,CAAH,GAAG;CAAH,CACG,EAAH,GAAG,KAAA;CAFL,GAAA;;CAAA,CAIA,CAAe,EAAf,CAAM,GAAU;CACd,OAAA;;CAAA,EAAI,CAAJ,CAAI,CAAM;CAAV,CACA,EAAA,EAAA,CAAA;CACC,UAAD;CAPF,EAIe;;CAJf,CASA,CAAiB,GAAX,CAAN;CATA"
+}
