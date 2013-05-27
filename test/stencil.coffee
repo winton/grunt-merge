@@ -11,7 +11,11 @@ describe 'stencil', ->
       grunt.loadTasks(path.resolve(__dirname, "../lib"))
 
     it 'should merge', ->
-      grunt.util.deferred_spawn = (options) ->
-        defer (resolve, reject) ->
-          console.log(options)
+      cmds = []
+      
+      grunt.util.cmd = (cmd) ->
+        cmds.push(cmd)
+        Q.resolve(cmd)
+
       grunt.tasks([ 'stencil:merge' ])
+      console.log(cmds)

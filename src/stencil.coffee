@@ -5,10 +5,20 @@ module.exports = (grunt) ->
   config = grunt.config("stencil") || {}
   config = grunt.file.readJSON(config.json || "stencil.json")
 
-  grunt.util.deferred_spawn = (options) ->
+  grunt.util.branches = ->
+    grunt.util.cmd("git branch").then(
+      (output) ->
+        output.split(/[\s\*]+/)
+    )
+
+  grunt.util.cmd = (cmd) ->
+    cmd = cmd.split(/\s+/)
+
     defer (resolve, reject) ->
       grunt.util.spawn(
-        _.extend(opts: stdio: "inherit", options)
+        cmd : cmd.shift()
+        args: cmd
+        opts: stdio: "inherit"
         (error, result, code) ->
           if error
             reject(error)
@@ -17,40 +27,45 @@ module.exports = (grunt) ->
       )
 
   grunt.registerTask("stencil:merge", "Merge template branches.", ->
-    promise = Q.when()
+    branches = []
+    done     = @async()
 
-    _.each config, (value, key) =>
-      promise.then(
-        grunt.util.deferred_spawn(
-          cmd : "git"
-          args: [ "checkout", key ]
-        )
-      ).then(
-        grunt.util.deferred_spawn(
-          cmd : "git"
-          args: [ "merge", "master" ]
-        )
-      ).then(
-        Q.all(
-          _.map value, (branch) ->
-            grunt.util.deferred_spawn(
-              cmd : "git"
-              args: [ "merge", branch ]
-            ).then(
-              grunt.util.deferred_spawn(
-                cmd : "git"
-                args: [ "push", key ]
-              )
-            )
-        )
-      ).then(
-        -> grunt.log.success("Merge complete.")
-        -> grunt.log.error("Please fix the conflict and run `grunt stencil:merge` again.")
-      )
+    promise = grunt.util.branches().then(
+      (values) -> branches = values
+    )
+
+    cmds = [ "git fetch --all" ]
+
+    cmds = cmds.concat _.map(
+      config
+      (value, key) =>
+        _.map value, (branch) ->
+          [
+            "git checkout -t origin/#{branch}"
+            "git pull origin #{branch}"
+
+            if branches.indexOf(branch) > -1
+              "git checkout #{key}"
+            else
+              "git checkout -t origin/#{key}"
+            
+            "git merge #{branch}"
+            "git push #{key}"
+          ]
+    )
+
+    _.each(
+      _.flatten(cmds)
+      (cmd) ->
+        promise = promise.then(grunt.util.cmd(cmd))
+    )
+
+    promise.then(
+      -> grunt.log.success("Merge complete.")
+      -> grunt.log.error("Please fix the conflict and run `grunt stencil:merge` again.")
+    ).fin(done)
   )
 
-  grunt.registerTask("stencil:pull", "Update project from template.", ->)
-    
-  grunt.registerTask("stencil:push", "Push commit(s) to template.", ->)
-
+  grunt.task.registerTask("stencil:pull", "Update project from template.", ->)
+  grunt.task.registerTask("stencil:push", "Push commit(s) to template.", ->)
   grunt.task.registerTask('stencil', [ 'stencil:pull' ])
