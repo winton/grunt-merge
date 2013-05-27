@@ -1,47 +1,43 @@
-##NodeTemplate
+##Stencil
 
-Node.js package template.
-
-###Goals
-
-* Use state of the art methodologies for running a project
-* Automate the creation and renaming of projects
-* Utilize [branches](https://github.com/winton/node-template/branches) to suit different project types
-* Projects maintain git history to easily pull updates
+Project template manager.
 
 ###Install
 
 	npm install node-template -g
 
-###Create a new project
+###What is a project template?
 
-	node-template <project-name>
+A project template is a git repository that you base your projects off of.
 
-###Grunt Tasks
+###Example project template branching structure
 
-The [tasks directory](https://github.com/winton/node-template/tree/master/tasks) contains preinstalled [Grunt](http://gruntjs.com) tasks.
+Within the project template repository, you typically have branches that add extra functionality to the template:
 
-The default task is [watch](https://github.com/winton/node-template/blob/master/tasks/watch.coffee).
+    master
+      -> backbone
+      	 -> backbone-bookshelf
+         -> backbone-bookshelf-mysql
+         -> backbone-bookshelf-postgres
+      -> express
+         -> express-sessions
+      -> express-grunt
+      -> grunt
 
-###Run tests
+If you commit to master, you'll need an easy way to merge them into all the sub-branches. Stencil helps you do this.
 
-	npm test
+###Add stencil.json to your project template
 
-###Dependencies
+    {
+        "backbone": [ "master" ],
+        "backbone-bookshelf-mysql": [ "master" ],
+        "express":  [ "master" ],
+        "express-sessions": [ "master", "express" ],
+        "express-grunt":    [ "master", "grunt", "express" ],
+        "grunt":    [ "master" ]
+    }
 
-####Production
-
-* [Q](https://github.com/kriskowal/q)
-* [Underscore](http://documentcloud.github.com/underscore)
-
-####Development
-
-* [Chai](http://chaijs.com)
-* [CoffeeScript](http://coffeescript.org)
-* [Grunt](http://gruntjs.com)
-* [Mocha](http://visionmedia.github.com/mocha)
-* [Prompt](https://github.com/flatiron/prompt)
-* [Sinon](http://sinonjs.org)
+The `stencil.json` file defines what branches should merge into it.
 
 ### Contribute
 
