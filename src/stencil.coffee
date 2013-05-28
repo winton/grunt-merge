@@ -8,7 +8,7 @@ module.exports = (grunt) ->
   grunt.util.branches = ->
     grunt.util.cmd("git branch").then(
       (output) ->
-        output.split(/[\s\*]+/)
+        output.split(/[\s\*]+/).slice(1)
     )
 
   grunt.util.cmd = (cmd) ->
@@ -18,12 +18,11 @@ module.exports = (grunt) ->
       grunt.util.spawn(
         cmd : cmd.shift()
         args: cmd
-        opts: stdio: "inherit"
         (error, result, code) ->
           if error
             reject(error)
           else
-            resolve(result, code)
+            resolve(result.toString(), code)
       )
 
   grunt.registerTask("stencil:merge", "Merge template branches.", ->
