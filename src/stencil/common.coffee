@@ -1,10 +1,11 @@
 common =
-  Q: require('q')
-  _: require('underscore')
+  fs  : require('fs')
+  path: require('path')
+  Q   : require('q')
+  _   : require('underscore')
 
-common.defer = (fn) ->
+common.defer = ->
   d = common.Q.defer()
-  fn(d.resolve, d.reject)
-  d.promise
+  [ d.promise, d.resolve, d.reject ]
 
 module.exports = common

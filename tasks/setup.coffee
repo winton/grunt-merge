@@ -3,20 +3,27 @@
 path = require("path")
 fs   = require("fs")
 
+Coffee = require("coffee-script")
+prompt = require("prompt")
+
+prompt.message   = ""
+prompt.delimiter = ""
+
 module.exports = (grunt) ->
 
   grunt.registerTask("setup:bin", "Rewrite the bin file.", ->
     fs.writeFileSync(
       path.resolve(__dirname, "../bin/#{grunt.config("pkg").name}")
-      """
-      #!/usr/bin/env coffee
-
-      Stencil = require("../lib/stencil")
-      """
+      "#!/usr/bin/env node\n" + Coffee.compile(
+        """
+        Stencil = require("../lib/stencil")
+        new Stencil
+        """
+      )
     )
   )
 
-  grunt.registerTask("setup:git", "Set the git origin to the same as the repo listed in package.json.", ->
+  grunt.registerTask("setup:remote", "Set the git origin to the same as the repo listed in package.json.", ->
     done = @async()
 
     grunt.util.spawn(
@@ -37,9 +44,10 @@ module.exports = (grunt) ->
     'setup'
     [
       'package'
-      'setup:git'
+      'setup:remote'
       'rename'
       'setup:bin'
       'replace'
+      'coffee'
     ]
   )

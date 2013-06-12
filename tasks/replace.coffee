@@ -14,6 +14,7 @@ module.exports = (grunt) ->
         "bin/*"
         "Gruntfile.coffee"
         "package.json"
+        "README.md"
         "src/**/*.coffee"
         "tasks/**/*.coffee"
         "test/**/*.coffee"
@@ -21,6 +22,10 @@ module.exports = (grunt) ->
     class_variables:
       overwrite   : true
       replacements: [ from: /Stencil/g, to: "<%= grunt.util.toCamel(pkg.name) %>" ]
+      src         : replace_paths
+    instance_variables:
+      overwrite   : true
+      replacements: [ from: /stencil/g, to: "<%= pkg.name.replace('-', '_') %>" ]
       src         : replace_paths
 
   grunt.loadNpmTasks "grunt-text-replace"

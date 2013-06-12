@@ -13,5 +13,11 @@ module.exports = (grunt) ->
     src_path:
       src : "src/stencil.coffee"
       dest: "src/<%= pkg.name %>.coffee"
+    test_directory:
+      src : "test/stencil"
+      dest: "test/<%= pkg.name %>"
+    test_path:
+      src : "test/stencil.coffee"
+      dest: "test/<%= pkg.name %>.coffee"
 
   grunt.loadNpmTasks "grunt-rename"

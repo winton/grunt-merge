@@ -1,3 +1,4 @@
-#!/usr/bin/env coffee
+#!/usr/bin/env node
 
-new require("../lib/stencil")
+Stencil = require("../lib/stencil");
+new Stencil();

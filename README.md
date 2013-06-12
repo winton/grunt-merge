@@ -4,7 +4,7 @@ Project template manager.
 
 ###Install
 
-	npm install node-template -g
+npm install stencil
 
 ###What is a project template?
 
@@ -39,14 +39,8 @@ If you commit to master, you'll need an easy way to merge them into all the sub-
 
 The `stencil.json` file defines what branches should merge into it.
 
-### Contribute
-
-[Create an issue](https://github.com/winton/node-template/issues/new) to discuss template changes.
-
-Pull requests for template changes and new branches are even better.
-
 ### Stay up to date
 
-[Watch this project](https://github.com/winton/node-template#) on Github.
+[Watch this project](https://github.com/winton/stencil#) on Github.
 
 [Follow Winton Welsh](http://twitter.com/intent/user?screen_name=wintonius) on Twitter.
