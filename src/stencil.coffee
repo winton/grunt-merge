@@ -12,18 +12,20 @@ module.exports = (grunt) ->
     )
 
   grunt.util.cmd = (cmd) ->
+    [ promise, resolve, reject ] = defer()
     cmd = cmd.split(/\s+/)
 
-    defer (resolve, reject) ->
-      grunt.util.spawn(
-        cmd : cmd.shift()
-        args: cmd
-        (error, result, code) ->
-          if error
-            reject(error)
-          else
-            resolve(result.toString(), code)
-      )
+    grunt.util.spawn(
+      cmd : cmd.shift()
+      args: cmd
+      (error, result, code) ->
+        if error
+          reject(error)
+        else
+          resolve(result.toString(), code)
+    )
+
+    promise
 
   grunt.registerTask("stencil:merge", "Merge template branches.", ->
     branches = []

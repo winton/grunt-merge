@@ -22,7 +22,8 @@
         "grunt-text-replace": "",
         "mocha": "",
         "prompt": "",
-        "sinon": ""
+        "sinon": "",
+        "source-map-support": ""
     },
     "bin": {
         "stencil": "./bin/stencil"
