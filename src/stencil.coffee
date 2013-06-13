@@ -13,13 +13,20 @@ module.exports = (grunt) ->
 
   grunt.util.cmd = (cmd) ->
     [ promise, resolve, reject ] = defer()
-    cmd = cmd.split(/\s+/)
+
+    og   = cmd
+    args = cmd.split(/\s+/)
+    cmd  = args.shift()
 
     grunt.util.spawn(
-      cmd : cmd.shift()
-      args: cmd
+      cmd : cmd
+      args: args
       (error, result, code) ->
         if error
+          console.log("#{og}\n")
+          grunt.log.error(result)
+          console.log("")
+          
           reject(error)
         else
           resolve(result.toString(), code)
