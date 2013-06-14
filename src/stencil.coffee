@@ -6,10 +6,24 @@ module.exports = (grunt) ->
   config = grunt.file.readJSON(config.json || "stencil.json")
 
   grunt.util.branches = ->
-    grunt.util.cmd("git branch").then(
+    grunt.util.cmd("git branch -a").then(
       (output) ->
         output.split(/[\s\*]+/).slice(1)
     )
+
+  grunt.util.checkoutCmd = (branch, create_from) ->
+    grunt.util.branches().then (branches) ->
+      if branches.indexOf(branch) > -1
+        "git checkout #{branch}"
+      else if branches.indexOf("origin/#{branch}") > -1
+        "git checkout -t origin/#{branch}"
+      else if create_from
+        [
+          grunt.util.checkoutCmd(create_from)
+          "git branch #{branch}"
+        ]
+      else
+        throw "Cannot checkout branch that does not exist"
 
   grunt.util.cmd = (cmd) ->
     [ promise, resolve, reject ] = defer()
@@ -26,7 +40,7 @@ module.exports = (grunt) ->
           console.log("#{og}\n")
           grunt.log.error(result)
           console.log("")
-          
+
           reject(error)
         else
           resolve(result.toString(), code)
@@ -37,36 +51,25 @@ module.exports = (grunt) ->
   grunt.registerTask("stencil:merge", "Merge template branches.", ->
     branches = []
     done     = @async()
+    promise  = grunt.util.cmd("git fetch --all")
 
-    promise = grunt.util.branches().then(
-      (values) -> branches = values
-    )
-
-    cmds = [ "git fetch --all" ]
-
-    cmds = cmds.concat _.map(
-      config
-      (value, key) =>
-        _.map value, (branch) ->
-          [
-            "git checkout -t origin/#{branch}"
-            "git pull origin #{branch}"
-
-            if branches.indexOf(branch) > -1
-              "git checkout #{key}"
-            else
-              "git checkout -t origin/#{key}"
-            
-            "git merge #{branch}"
-            "git push #{key}"
-          ]
-    )
-
-    _.each(
-      _.flatten(cmds)
-      (cmd) ->
-        promise = promise.then(grunt.util.cmd(cmd))
-    )
+    _.each config, (value, key) =>
+      promise = promise.then(->
+        grunt.util.checkoutCmd(key, value[0])
+      ).then (co_key) ->
+        _.each value, (branch) ->
+          grunt.util.checkoutCmd(branch).then (co_branch) ->
+            _.inject(
+              [
+                co_branch
+                "git pull origin #{branch}"
+                co_key
+                "git merge #{branch}"
+                "git push #{key}"
+              ]
+              (promise, cmd) -> grunt.util.cmd(cmd)
+              promise
+            )
 
     promise.then(
       -> grunt.log.success("Merge complete.")

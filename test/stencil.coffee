@@ -47,26 +47,29 @@ describe 'stencil', ->
 
   describe 'merge', ->
     it 'should execute the correct commands', (done) ->
-      stub = sinon.stub grunt.util, "cmd", (cmd) ->
+      cmd_stub = sinon.stub grunt.util, "cmd", (cmd) ->
         Q.resolve(cmd)
 
+      checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
+        Q.resolve("git checkout #{branch}")
+
       grunt.tasks [ 'stencil:merge' ], {}, ->
-        _.flatten(stub.args).should.eql([
-          'git branch'
+        _.flatten(cmd_stub.args).should.eql([
           'git fetch --all'
-          'git checkout -t origin/a'
+          'git checkout a'
           'git pull origin a'
-          'git checkout -t origin/a-b'
+          'git checkout a-b'
           'git merge a'
           'git push a-b'
-          'git checkout -t origin/b'
+          'git checkout b'
           'git pull origin b'
-          'git checkout -t origin/a-b'
+          'git checkout a-b'
           'git merge b'
           'git push a-b'
         ])
 
         grunt.util.cmd.restore()
+        grunt.util.checkoutCmd.restore()
         done()
 
     it 'should merge', (done) ->
