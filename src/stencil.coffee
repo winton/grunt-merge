@@ -53,23 +53,32 @@ module.exports = (grunt) ->
     done     = @async()
     promise  = grunt.util.cmd("git fetch --all")
 
-    _.each config, (value, key) =>
-      promise = promise.then(->
+    _.each config, (value, key) ->
+      promise = promise.then(=>
         grunt.util.checkoutCmd(key, value[0])
-      ).then (co_key) ->
-        _.each value, (branch) ->
-          grunt.util.checkoutCmd(branch).then (co_branch) ->
-            _.inject(
-              [
-                co_branch
-                "git pull origin #{branch}"
-                co_key
-                "git merge #{branch}"
-                "git push #{key}"
-              ]
-              (promise, cmd) -> grunt.util.cmd(cmd)
-              promise
-            )
+      ).then (co) =>
+        @co_key = co
+
+      promise = _.inject(
+        value
+        (promise, branch) =>
+          promise = promise.then(=>
+            grunt.util.checkoutCmd(branch)
+          ).then((co) =>
+            @co_branch = co
+          ).then(->
+            grunt.util.cmd(@co_branch)
+          ).then(->
+            grunt.util.cmd("git pull origin #{branch}")
+          ).then(->
+            grunt.util.cmd(@co_key)
+          ).then(->
+            grunt.util.cmd("git merge #{branch}")
+          ).then(->
+            grunt.util.cmd("git push #{key}")
+          )
+        promise
+      )
 
     promise.then(
       -> grunt.log.success("Merge complete.")
