@@ -1,10 +1,10 @@
 {
-    "name": "stencil",
+    "name": "grunt-merge",
     "version": "0.1.0",
-    "author": "Winton Welsh <mail@wintoni.us>",
+    "author": "winton",
     "repository": {
         "type": "git",
-        "url": "https://github.com/winton/stencil.git"
+        "url": "https://github.com/winton/grunt-merge.git"
     },
     "dependencies": {
         "q": "",
@@ -26,7 +26,7 @@
         "source-map-support": ""
     },
     "bin": {
-        "stencil": "./bin/stencil"
+        "grunt-merge": "./bin/grunt-merge"
     },
     "license": "MIT",
     "scripts": {

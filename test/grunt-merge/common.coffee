@@ -1,6 +1,6 @@
-Common = require("../../lib/stencil/common")
+Common = require("../../lib/grunt-merge/common")
 
-describe 'Stencil::Common', ->
+describe 'GruntMerge::Common', ->
   describe '#defer', ->
     it 'should resolve', (done) ->
       fn = ->

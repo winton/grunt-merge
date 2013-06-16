@@ -1,10 +1,10 @@
-##Stencil
+##GruntMerge
 
 Project template manager.
 
 ###Install
 
-npm install stencil
+npm install grunt-merge
 
 ###What is a project template?
 
@@ -24,9 +24,9 @@ Within the project template repository, you typically have branches that add ext
       -> express-grunt
       -> grunt
 
-If you commit to master, you'll need an easy way to merge them into all the sub-branches. Stencil helps you do this.
+If you commit to master, you'll need an easy way to merge them into all the sub-branches. GruntMerge helps you do this.
 
-###Add stencil.json to your project template
+###Add grunt-merge.json to your project template
 
     {
         "backbone": [ "master" ],
@@ -37,10 +37,10 @@ If you commit to master, you'll need an easy way to merge them into all the sub-
         "grunt":    [ "master" ]
     }
 
-The `stencil.json` file defines what branches should merge into it.
+The `merge.json` file defines what branches should merge into it.
 
 ### Stay up to date
 
-[Watch this project](https://github.com/winton/stencil#) on Github.
+[Watch this project](https://github.com/winton/grunt-merge#) on Github.
 
 [Follow Winton Welsh](http://twitter.com/intent/user?screen_name=wintonius) on Twitter.

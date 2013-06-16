@@ -9,7 +9,7 @@ module.exports = (grunt) ->
   grunt.config.data.replace =
     dashed_paths:
       overwrite   : true
-      replacements: [ from: /stencil/g, to: "<%= pkg.name %>" ]
+      replacements: [ from: /grunt-merge/g, to: "<%= pkg.name %>" ]
       src         : replace_paths = [
         "bin/*"
         "Gruntfile.coffee"
@@ -21,11 +21,11 @@ module.exports = (grunt) ->
       ]
     class_variables:
       overwrite   : true
-      replacements: [ from: /Stencil/g, to: "<%= grunt.util.toCamel(pkg.name) %>" ]
+      replacements: [ from: /GruntMerge/g, to: "<%= grunt.util.toCamel(pkg.name) %>" ]
       src         : replace_paths
     instance_variables:
       overwrite   : true
-      replacements: [ from: /stencil/g, to: "<%= pkg.name.replace('-', '_') %>" ]
+      replacements: [ from: /grunt-merge/g, to: "<%= pkg.name.replace('-', '_') %>" ]
       src         : replace_paths
 
   grunt.loadNpmTasks "grunt-text-replace"

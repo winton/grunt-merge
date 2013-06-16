@@ -1,11 +1,11 @@
-for key, value of require("../lib/stencil/common")
+for key, value of require("../lib/grunt-merge/common")
   eval("var #{key} = value;")
 
 path  = require("path")
 grunt = require("grunt")
 sinon = require("sinon")
 
-describe 'stencil', ->
+describe 'grunt-merge', ->
 
   chdirToFixture = ->
     process.chdir(path.resolve(__dirname, "fixture"))
@@ -77,7 +77,7 @@ describe 'stencil', ->
       checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
         Q.resolve("git checkout #{branch}")
 
-      grunt.tasks [ 'stencil:merge' ], {}, ->
+      grunt.tasks [ 'grunt-merge:merge' ], {}, ->
         _.flatten(cmd_stub.args).should.eql([
           'git fetch --all'
           'git checkout a'
@@ -98,7 +98,7 @@ describe 'stencil', ->
 
     it 'should merge', (done) ->
       setupGit().then(->
-        runTask('stencil:merge')
+        runTask('grunt-merge:merge')
       ).then(->
         grunt.util.cmds("git checkout master")
       ).then(->
@@ -139,7 +139,7 @@ describe 'stencil', ->
         sinon.stub grunt.log, "error", (str...) ->
           console_output.push(str)
 
-        runTask('stencil:merge')
+        runTask('grunt-merge:merge')
       ).then(->
         console.log.restore()
         grunt.log.error.restore()

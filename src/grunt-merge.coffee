@@ -1,9 +1,9 @@
-for key, value of require('./stencil/common')
+for key, value of require('./grunt-merge/common')
   eval("var #{key} = value;")
 
 module.exports = (grunt) ->
-  config = grunt.config("stencil") || {}
-  config = grunt.file.readJSON(config.json || "stencil.json")
+  config = grunt.config("merge") || {}
+  config = grunt.file.readJSON(config.json || "merge.json")
 
   grunt.util.branches = ->
     grunt.util.cmd("git branch -a").then(
@@ -66,7 +66,7 @@ module.exports = (grunt) ->
       Q.resolve()
     )
 
-  grunt.registerTask("stencil:merge", "Merge template branches.", ->
+  grunt.registerTask("merge", "Merge branches.", ->
     branches = []
     done     = @async()
     promise  = grunt.util.cmd("git fetch --all")
@@ -105,7 +105,3 @@ module.exports = (grunt) ->
         )
     ).fin(done)
   )
-
-  grunt.task.registerTask("stencil:pull", "Update project from template.", ->)
-  grunt.task.registerTask("stencil:push", "Push commit(s) to template.", ->)
-  grunt.task.registerTask('stencil', [ 'stencil:pull' ])

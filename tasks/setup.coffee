@@ -16,8 +16,8 @@ module.exports = (grunt) ->
       path.resolve(__dirname, "../bin/#{grunt.config("pkg").name}")
       "#!/usr/bin/env node\n" + Coffee.compile(
         """
-        Stencil = require("../lib/stencil")
-        new Stencil
+        GruntMerge = require("../lib/grunt-merge")
+        new GruntMerge
         """
       )
     )

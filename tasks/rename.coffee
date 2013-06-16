@@ -5,19 +5,19 @@ module.exports = (grunt) ->
 
   grunt.config.data.rename =
     bin_path:
-      src : "bin/stencil"
+      src : "bin/grunt-merge"
       dest: "bin/<%= pkg.name %>"
     src_directory:
-      src : "src/stencil"
+      src : "src/grunt-merge"
       dest: "src/<%= pkg.name %>"
     src_path:
-      src : "src/stencil.coffee"
+      src : "src/grunt-merge.coffee"
       dest: "src/<%= pkg.name %>.coffee"
     test_directory:
-      src : "test/stencil"
+      src : "test/grunt-merge"
       dest: "test/<%= pkg.name %>"
     test_path:
-      src : "test/stencil.coffee"
+      src : "test/grunt-merge.coffee"
       dest: "test/<%= pkg.name %>.coffee"
 
   grunt.loadNpmTasks "grunt-rename"
