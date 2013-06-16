@@ -1,35 +1,35 @@
 {
-    "name": "grunt-merge",
-    "version": "0.1.0",
-    "author": "Winton Welsh <mail@wintoni.us>",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/winton/grunt-merge.git"
-    },
-    "dependencies": {
-        "q": "",
-        "underscore": ""
-    },
-    "devDependencies": {
-        "chai": "",
-        "coffee-script": "",
-        "glob": "",
-        "grunt": "",
-        "grunt-contrib-coffee": "",
-        "grunt-contrib-watch": "",
-        "grunt-release": "",
-        "grunt-rename": "",
-        "grunt-text-replace": "",
-        "mocha": "",
-        "prompt": "",
-        "sinon": "",
-        "source-map-support": ""
-    },
-    "bin": {
-        "grunt-merge": "./bin/grunt-merge"
-    },
-    "license": "MIT",
-    "scripts": {
-        "test": "mocha test/test.js --reporter spec"
-    }
+  "name": "grunt-merge",
+  "version": "0.1.1",
+  "author": "Winton Welsh <mail@wintoni.us>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/winton/grunt-merge.git"
+  },
+  "dependencies": {
+    "q": "",
+    "underscore": ""
+  },
+  "devDependencies": {
+    "chai": "",
+    "coffee-script": "",
+    "glob": "",
+    "grunt": "",
+    "grunt-contrib-coffee": "",
+    "grunt-contrib-watch": "",
+    "grunt-release": "",
+    "grunt-rename": "",
+    "grunt-text-replace": "",
+    "mocha": "",
+    "prompt": "",
+    "sinon": "",
+    "source-map-support": ""
+  },
+  "bin": {
+    "grunt-merge": "./bin/grunt-merge"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test/test.js --reporter spec"
+  }
 }
