@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-(function() {
-  var GruntMerge;
-
-  GruntMerge = require("../lib/grunt-merge");
-
-  new GruntMerge;
-
-}).call(this);

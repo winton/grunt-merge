@@ -1,43 +1,28 @@
 ##GruntMerge
 
-Project template manager.
+Grunt task that merges git branches for you.
 
 ###Install
 
 npm install grunt-merge
 
-###What is a project template?
+###Example Gruntfile
 
-A project template is a git repository that you base your projects off of.
+    module.exports = (grunt) ->
+      grunt.config.data.merge =
+        'a-b': [ 'a', 'b' ]
 
-###Example project template branching structure
+      grunt.loadNpmTasks "grunt-merge"
 
-Within the project template repository, you typically have branches that add extra functionality to the template:
+This example creates a new branch (`a-b`) and then sequentially merges branches `a` and `b` into it.
 
-    master
-      -> backbone
-      	 -> backbone-bookshelf
-         -> backbone-bookshelf-mysql
-         -> backbone-bookshelf-postgres
-      -> express
-         -> express-sessions
-      -> express-grunt
-      -> grunt
+Run `grunt merge` to execute your merges.
 
-If you commit to master, you'll need an easy way to merge them into all the sub-branches. GruntMerge helps you do this.
+###Conflicts
 
-###Add grunt-merge.json to your project template
+If there are merge conflicts, the task stops and allows you to fix them.
 
-    {
-        "backbone": [ "master" ],
-        "backbone-bookshelf-mysql": [ "master" ],
-        "express":  [ "master" ],
-        "express-sessions": [ "master", "express" ],
-        "express-grunt":    [ "master", "grunt", "express" ],
-        "grunt":    [ "master" ]
-    }
-
-The `merge.json` file defines what branches should merge into it.
+When you're finished, run `grunt merge` again.
 
 ### Stay up to date
 
