@@ -66,7 +66,6 @@ module.exports = (grunt) ->
     )
 
   grunt.registerTask("merge", "Merge branches.", ->
-    branches = []
     done     = @async()
     promise  = grunt.util.cmd("git fetch --all")
 
