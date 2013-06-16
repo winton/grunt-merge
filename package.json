@@ -1,7 +1,7 @@
 {
     "name": "grunt-merge",
     "version": "0.1.0",
-    "author": "winton",
+    "author": "Winton Welsh <mail@wintoni.us>",
     "repository": {
         "type": "git",
         "url": "https://github.com/winton/grunt-merge.git"
