@@ -40,6 +40,9 @@ module.exports = (grunt) ->
 
       (error, result, code) =>
         if error
+          error  = error.toString()
+          result = result.toString()
+
           grunt.log.error("Command failed: #{og}")
           grunt.log.error(result)  if result.length
           grunt.log.error(error)   if error.length
@@ -49,9 +52,9 @@ module.exports = (grunt) ->
         else
           @last_cmd    = og
           @last_code   = code
-          @last_result = result.toString()
+          @last_result = result
 
-          resolve(@last_result, @last_code)
+          resolve(result, code)
     )
 
     promise
