@@ -54,7 +54,10 @@ module.exports = (grunt) ->
           @last_code   = code
           @last_result = result
 
-          resolve(result, code)
+          setTimeout(
+            -> resolve(result, code)
+            1
+          )
     )
 
     promise
