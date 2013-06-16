@@ -1,5 +1,7 @@
 ##GruntMerge
 
+[![Build Status](https://travis-ci.org/winton/grunt-merge.png)](https://travis-ci.org/winton/grunt-merge) [![NPM version](https://badge.fury.io/js/grunt-merge.png)](http://badge.fury.io/js/grunt-merge)
+
 Grunt task that merges git branches for you.
 
 ###Install
