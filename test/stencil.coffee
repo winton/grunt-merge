@@ -13,6 +13,17 @@ describe 'stencil', ->
   loadTasks = ->
     grunt.loadTasks(path.resolve(__dirname, "../lib"))
 
+  runTask = (task) ->
+    [ promise, resolve ] = defer()
+
+    grunt.tasks(
+      [ task ]
+      'offline': true 
+      -> resolve()
+    )
+
+    promise
+
   setupGit = ->
     chdirToFixture()
     Q.resolve().then(->
@@ -87,9 +98,39 @@ describe 'stencil', ->
 
     it 'should merge', (done) ->
       setupGit().then(->
-        grunt.tasks(
-          [ 'stencil:merge' ]
-          'offline': true 
-          -> done()
-        )
+        runTask('stencil:merge')
+      ).then(->
+        grunt.util.cmds("git checkout master")
+      ).then(->
+        fs.existsSync("a.txt").should.eql(false)
+        fs.existsSync("b.txt").should.eql(false)
+      ).then(->
+        grunt.util.cmds("git checkout a")
+      ).then(->
+        fs.existsSync("a.txt").should.eql(true)
+        fs.existsSync("b.txt").should.eql(false)
+      ).then(->
+        grunt.util.cmds("git checkout b")
+      ).then(->
+        fs.existsSync("a.txt").should.eql(false)
+        fs.existsSync("b.txt").should.eql(true)
+      ).then(->
+        grunt.util.cmds("git checkout a-b")
+      ).then(->
+        fs.existsSync("a.txt").should.eql(true)
+        fs.existsSync("b.txt").should.eql(true)
+        done()
       )
+
+    it 'should exit on conflict', (done) ->
+      setupGit().then(->
+        grunt.util.cmds("git checkout a")
+      ).then(->
+        fs.writeFileSync("b.txt", "a")
+        grunt.util.cmds(
+          "git add ."
+          "git commit -m \"conflict\""
+        )
+      ).then(->
+        runTask('stencil:merge')
+      ).then(done)

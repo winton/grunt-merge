@@ -41,8 +41,8 @@ module.exports = (grunt) ->
 
       (error, result, code) =>
         if error
-          console.log("#{og}\n")
-          grunt.log.error(result)
+          grunt.log.error("Command failed: #{og}")
+          grunt.log.error(result)  if result.length
           console.log("")
 
           reject(error)
@@ -97,11 +97,10 @@ module.exports = (grunt) ->
     promise.then(
       -> grunt.log.success("Merge complete.")
       (e) ->
-        throw e
-        grunt.log.error("Please fix the conflict and run `grunt stencil:merge` again.")
-    ).fin(
-      done
-    ).done()
+        grunt.log.error(
+          "Please fix the conflict and run `grunt stencil:merge` again."
+        )
+    ).fin(done)
   )
 
   grunt.task.registerTask("stencil:pull", "Update project from template.", ->)
