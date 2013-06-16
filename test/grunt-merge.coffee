@@ -11,14 +11,15 @@ describe 'grunt-merge', ->
     process.chdir(path.resolve(__dirname, "fixture"))
 
   loadTasks = ->
+    grunt.config.data.merge = "a-b": [ "a", "b" ]
     grunt.loadTasks(path.resolve(__dirname, "../lib"))
 
-  runTask = (task) ->
+  runTask = (task, offline=true) ->
     [ promise, resolve ] = defer()
 
     grunt.tasks(
       [ task ]
-      'offline': true 
+      'offline': offline 
       -> resolve()
     )
 
@@ -77,7 +78,7 @@ describe 'grunt-merge', ->
       checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
         Q.resolve("git checkout #{branch}")
 
-      grunt.tasks [ 'merge' ], {}, ->
+      runTask('merge', false).then ->
         _.flatten(cmd_stub.args).should.eql([
           'git fetch --all'
           'git checkout a'

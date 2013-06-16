@@ -3,7 +3,6 @@ for key, value of require('./grunt-merge/common')
 
 module.exports = (grunt) ->
   config = grunt.config("merge") || {}
-  config = grunt.file.readJSON(config.json || "merge.json")
 
   grunt.util.branches = ->
     grunt.util.cmd("git branch -a").then(
