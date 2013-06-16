@@ -42,6 +42,7 @@ module.exports = (grunt) ->
         if error
           grunt.log.error("Command failed: #{og}")
           grunt.log.error(result)  if result.length
+          grunt.log.error(error)   if error.length
           console.log("")
 
           reject(error)
