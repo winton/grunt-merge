@@ -13,23 +13,36 @@ describe 'stencil', ->
   loadTasks = ->
     grunt.loadTasks(path.resolve(__dirname, "../lib"))
 
-  run = (cmds...) ->
-    _.inject(
-      cmds
-      (promise, cmd) ->
-        promise.then(grunt.util.cmd(cmd))
-      Q.resolve()
-    )
-
   setupGit = ->
     chdirToFixture()
-    run(
-      "rm -rf .git"
-      "git init ."
-      "git add ."
-      "git commit -a -m \"First\""
-      "git branch a"
-      "git branch b"
+    Q.resolve().then(->
+      grunt.util.cmd("rm a.txt")  if fs.existsSync("a.txt")
+    ).then(->
+      grunt.util.cmd("rm b.txt")  if fs.existsSync("b.txt")
+    ).then(->
+      grunt.util.cmds(
+        "rm -rf .git"
+        "git init ."
+        "git add ."
+        "git commit -a -m \"First\""
+        "git branch a"
+        "git branch b"
+        "git checkout a"
+      )
+    ).then(->
+      fs.writeFileSync("a.txt", "a")
+      grunt.util.cmds(
+        "git add ."
+        "git commit -m \"a\""
+      )
+    ).then(->
+      grunt.util.cmds("git checkout b")
+    ).then(->
+      fs.writeFileSync("b.txt", "b")
+      grunt.util.cmds(
+        "git add ."
+        "git commit -m \"b\""
+      )
     )
 
   beforeEach(chdirToFixture)
@@ -73,17 +86,7 @@ describe 'stencil', ->
         done()
 
     it 'should merge', (done) ->
-      run("rm hello.txt").then(->
-        setupGit()
-      ).then(->
-        run("git checkout a")
-      ).then(->
-        fs.writeFileSync("hello.txt", "hello")
-        run(
-          "git add ."
-          "git commit -m \"Hello\""
-        )
-      ).then(->
+      setupGit().then(->
         grunt.tasks(
           [ 'stencil:merge' ]
           'offline': true 
