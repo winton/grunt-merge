@@ -18,10 +18,12 @@ module.exports = (grunt) ->
       else if branches.indexOf("origin/#{branch}") > -1
         "git checkout -t origin/#{branch}"
       else if create_from
-        [
-          grunt.util.checkoutCmd(create_from)
-          "git branch #{branch}"
-        ]
+        grunt.util.checkoutCmd(create_from).then (co) ->
+          [
+            co
+            "git branch #{branch}"
+            "git checkout #{branch}"
+          ]
       else
         throw "Cannot checkout branch that does not exist"
 
@@ -48,42 +50,52 @@ module.exports = (grunt) ->
 
     promise
 
+  grunt.util.cmds = (cmds...) ->
+    unless cmds instanceof Array
+      cmds = [ cmds ]
+
+    _.inject(
+      _.flatten(cmds)
+      (promise, cmd) -> grunt.util.cmd(cmd)
+      Q.resolve()
+    )
+
   grunt.registerTask("stencil:merge", "Merge template branches.", ->
     branches = []
     done     = @async()
     promise  = grunt.util.cmd("git fetch --all")
 
     _.each config, (value, key) ->
-      promise = promise.then(=>
-        grunt.util.checkoutCmd(key, value[0])
-      ).then (co) =>
-        @co_key = co
-
       promise = _.inject(
         value
         (promise, branch) =>
-          promise = promise.then(=>
+          promise.then(=>
+            grunt.util.checkoutCmd(key, value[0])
+          ).then((co) =>
+            @co_key = co
             grunt.util.checkoutCmd(branch)
           ).then((co) =>
-            @co_branch = co
-          ).then(->
-            grunt.util.cmd(@co_branch)
-          ).then(->
-            grunt.util.cmd("git pull origin #{branch}")
-          ).then(->
-            grunt.util.cmd(@co_key)
-          ).then(->
-            grunt.util.cmd("git merge #{branch}")
-          ).then(->
-            grunt.util.cmd("git push #{key}")
+            grunt.util.cmds(co)
+          ).then(=>
+            unless grunt.option('offline')
+              grunt.util.cmd("git pull origin #{branch}")
+          ).then(=>
+            grunt.util.cmds(@co_key, "git merge #{branch}")
+          ).then(=>
+            unless grunt.option('offline')
+              grunt.util.cmd("git push #{key}")
           )
         promise
       )
 
     promise.then(
       -> grunt.log.success("Merge complete.")
-      -> grunt.log.error("Please fix the conflict and run `grunt stencil:merge` again.")
-    ).fin(done)
+      (e) ->
+        throw e
+        grunt.log.error("Please fix the conflict and run `grunt stencil:merge` again.")
+    ).fin(
+      done
+    ).done()
   )
 
   grunt.task.registerTask("stencil:pull", "Update project from template.", ->)

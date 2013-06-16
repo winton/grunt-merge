@@ -51,6 +51,7 @@ describe 'stencil', ->
         Q.resolve(cmd)
 
       checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
+        console.log("stub", "git checkout #{branch}")
         Q.resolve("git checkout #{branch}")
 
       grunt.tasks [ 'stencil:merge' ], {}, ->
@@ -84,5 +85,9 @@ describe 'stencil', ->
           "git commit -m \"Hello\""
         )
       ).then(->
-        grunt.tasks [ 'stencil:merge' ], {}, -> done()
+        grunt.tasks(
+          [ 'stencil:merge' ]
+          'offline': true 
+          -> done()
+        )
       )
