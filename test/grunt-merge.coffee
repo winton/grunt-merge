@@ -26,14 +26,14 @@ describe 'grunt-merge', ->
     promise
 
   setupGit = ->
-    chdirToFixture()
-    Q.resolve().then(->
-      grunt.util.cmd("rm a.txt")  if fs.existsSync("a.txt")
-    ).then(->
-      grunt.util.cmd("rm b.txt")  if fs.existsSync("b.txt")
+    fixture_path = path.resolve(__dirname, "fixture")
+
+    grunt.util.cmd("rm -rf #{fixture_path}").then(->
+      fs.mkdirSync(fixture_path)
+      chdirToFixture()
+      fs.writeFileSync("Gruntfile.coffee", "module.exports = (grunt) ->")
     ).then(->
       grunt.util.cmds(
-        "rm -rf .git"
         "git init ."
         "git add ."
         "git commit -a -m \"First\""
