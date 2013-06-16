@@ -39,10 +39,10 @@ module.exports = (grunt) ->
       args: args
 
       (error, result, code) =>
-        if error
-          error  = error.toString()
-          result = result.toString()
+        error  = error.toString()   if error?
+        result = result.toString()  if result?
 
+        if error
           grunt.log.error("Command failed: #{og}")
           grunt.log.error(result)  if result.length
           grunt.log.error(error)   if error.length
