@@ -77,7 +77,7 @@ describe 'grunt-merge', ->
       checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
         Q.resolve("git checkout #{branch}")
 
-      grunt.tasks [ 'grunt-merge:merge' ], {}, ->
+      grunt.tasks [ 'merge' ], {}, ->
         _.flatten(cmd_stub.args).should.eql([
           'git fetch --all'
           'git checkout a'
@@ -98,7 +98,7 @@ describe 'grunt-merge', ->
 
     it 'should merge', (done) ->
       setupGit().then(->
-        runTask('grunt-merge:merge')
+        runTask('merge')
       ).then(->
         grunt.util.cmds("git checkout master")
       ).then(->
@@ -139,7 +139,7 @@ describe 'grunt-merge', ->
         sinon.stub grunt.log, "error", (str...) ->
           console_output.push(str)
 
-        runTask('grunt-merge:merge')
+        runTask('merge')
       ).then(->
         console.log.restore()
         grunt.log.error.restore()
