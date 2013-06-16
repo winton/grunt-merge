@@ -28,7 +28,8 @@ module.exports = (grunt) ->
         throw "Cannot checkout branch that does not exist"
 
   grunt.util.cmd = (cmd) ->
-    [ promise, resolve, reject ] = defer()
+    return Q.resolve(@last_result)  if @last_cmd == cmd
+    [ promise, resolve, reject ] =  defer()
 
     og   = cmd
     args = cmd.split(/\s+/)
@@ -37,7 +38,8 @@ module.exports = (grunt) ->
     grunt.util.spawn(
       cmd : cmd
       args: args
-      (error, result, code) ->
+
+      (error, result, code) =>
         if error
           console.log("#{og}\n")
           grunt.log.error(result)
@@ -45,7 +47,11 @@ module.exports = (grunt) ->
 
           reject(error)
         else
-          resolve(result.toString(), code)
+          @last_cmd    = og
+          @last_code   = code
+          @last_result = result.toString()
+
+          resolve(@last_result, @last_code)
     )
 
     promise
