@@ -123,6 +123,8 @@ describe 'stencil', ->
       )
 
     it 'should exit on conflict', (done) ->
+      console_output = []
+
       setupGit().then(->
         grunt.util.cmds("git checkout a")
       ).then(->
@@ -132,5 +134,18 @@ describe 'stencil', ->
           "git commit -m \"conflict\""
         )
       ).then(->
+        sinon.stub console, "log", (str...) ->
+          console_output.push(str)
+        sinon.stub grunt.log, "error", (str...) ->
+          console_output.push(str)
+
         runTask('stencil:merge')
-      ).then(done)
+      ).then(->
+        console.log.restore()
+        grunt.log.error.restore()
+
+        console_output = _.flatten(console_output).join()
+        console_output.indexOf(
+          "Command failed: git merge b"
+        ).should.be.above(-1)
+      ).then(-> done())

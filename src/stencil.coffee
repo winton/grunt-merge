@@ -97,8 +97,11 @@ module.exports = (grunt) ->
     promise.then(
       -> grunt.log.success("Merge complete.")
       (e) ->
-        grunt.log.error(
-          "Please fix the conflict and run `grunt stencil:merge` again."
+        grunt.util.cmds("git status").then((output) ->
+          grunt.log.error(
+            "Please fix the conflict and run `grunt merge` again."
+          )
+          console.log("\n#{output}")
         )
     ).fin(done)
   )
