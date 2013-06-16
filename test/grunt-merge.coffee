@@ -8,7 +8,9 @@ sinon = require("sinon")
 describe 'grunt-merge', ->
 
   chdirToFixture = ->
-    process.chdir(path.resolve(__dirname, "fixture"))
+    fixture_path = path.resolve(__dirname, "fixture")
+    fs.mkdirSync(fixture_path)  unless fs.existsSync(fixture_path)
+    process.chdir(fixture_path)
 
   loadTasks = ->
     grunt.config.data.merge = "a-b": [ "a", "b" ]
@@ -29,7 +31,6 @@ describe 'grunt-merge', ->
     fixture_path = path.resolve(__dirname, "fixture")
 
     grunt.util.cmd("rm -rf #{fixture_path}").then(->
-      fs.mkdirSync(fixture_path)
       chdirToFixture()
       fs.writeFileSync("Gruntfile.coffee", "module.exports = (grunt) ->")
     ).then(->
