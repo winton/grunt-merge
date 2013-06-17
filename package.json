@@ -26,6 +26,7 @@
     "source-map-support": ""
   },
   "license": "MIT",
+  "main": "./lib/grunt-mergs.js",
   "scripts": {
     "test": "mocha test/test.js --reporter spec"
   }
