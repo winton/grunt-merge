@@ -14,7 +14,7 @@ npm install grunt-merge
       grunt.config.data.merge =
         'a-b': [ 'a', 'b' ]
 
-      grunt.loadNpmTasks "grunt-merge"
+      grunt.task.loadTasks path.resolve(__dirname, "../node_modules/grunt-merge/lib")
 
 This example creates a new branch (`a-b`) and then sequentially merges branches `a` and `b` into it.
 
