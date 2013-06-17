@@ -17,6 +17,7 @@
     "grunt": "",
     "grunt-contrib-coffee": "",
     "grunt-contrib-watch": "",
+    "grunt-merge": "",
     "grunt-release": "",
     "grunt-rename": "",
     "grunt-text-replace": "",
@@ -26,7 +27,7 @@
     "source-map-support": ""
   },
   "license": "MIT",
-  "main": "./lib/grunt-mergs.js",
+  "main": "./lib/grunt-merge.js",
   "scripts": {
     "test": "mocha test/test.js --reporter spec"
   }
