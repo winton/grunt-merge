@@ -73,13 +73,19 @@ describe 'grunt-merge', ->
 
   describe 'merge', ->
     it 'should execute the correct commands', (done) ->
+      branches_stub = sinon.stub grunt.util, "branches", (current) ->
+        if current
+          Q.resolve("master")
+        else
+          Q.resolve("")
+
       cmd_stub = sinon.stub grunt.util, "cmd", (cmd) ->
         Q.resolve(cmd)
 
       checkout_cmd_stub = sinon.stub grunt.util, "checkoutCmd", (branch) ->
         Q.resolve("git checkout #{branch}")
 
-      runTask('merge', false).then ->
+      runTask('merge', false).then(->
         _.flatten(cmd_stub.args).should.eql([
           'git fetch --all'
           'git checkout a'
@@ -92,11 +98,13 @@ describe 'grunt-merge', ->
           'git checkout a-b'
           'git merge b'
           'git push origin a-b'
+          'git checkout master'
         ])
 
+        grunt.util.branches.restore()
         grunt.util.cmd.restore()
         grunt.util.checkoutCmd.restore()
-        done()
+      ).fin(-> done())
 
     it 'should merge', (done) ->
       setupGit().then(->

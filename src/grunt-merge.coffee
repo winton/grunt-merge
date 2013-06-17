@@ -4,10 +4,13 @@ for key, value of require('./grunt-merge/common')
 module.exports = (grunt) ->
   config = grunt.config("merge") || {}
 
-  grunt.util.branches = ->
+  grunt.util.branches = (current=false) ->
     grunt.util.cmd("git branch -a").then(
       (output) ->
-        output.split(/[\s\*]+/).slice(1)
+        if current
+          output.match(/\*\s+(.+)/)[1]
+        else
+          output.split(/[\s\*]+/).slice(1)
     )
 
   grunt.util.checkoutCmd = (branch, create_from) ->
@@ -52,7 +55,7 @@ module.exports = (grunt) ->
         else
           if grunt.option('debug')
             grunt.log.ok(result)  if result
-          
+
           @last_cmd    = og
           @last_code   = code
           @last_result = result
@@ -75,7 +78,10 @@ module.exports = (grunt) ->
 
   grunt.registerTask("merge", "Merge branches.", ->
     done     = @async()
-    promise  = grunt.util.cmd("git fetch --all")
+    promise  = grunt.util.cmd("git fetch --all").then(=>
+      grunt.util.branches(true)
+    ).then (branch) =>
+      @return_branch = branch
 
     _.each config, (value, key) ->
       promise = _.inject(
@@ -100,7 +106,11 @@ module.exports = (grunt) ->
         promise
       )
 
-    promise.then(
+    promise.then(=>
+      grunt.util.checkoutCmd(@return_branch)
+    ).then((co) =>
+      grunt.util.cmds(co)
+    ).then(
       -> grunt.log.success("Merge complete.")
       (e) ->
         grunt.util.cmds("git status").then((output) ->
