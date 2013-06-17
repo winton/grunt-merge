@@ -39,25 +39,25 @@ module.exports = (grunt) ->
       args: args
 
       (error, result, code) =>
-        error  = error.toString()   if error?
-        result = result.toString()  if result?
+        error  = error.toString()   if error
+        result = result.toString()  if result
 
         if error
           grunt.log.error("Command failed: #{og}")
-          grunt.log.error(result)  if result.length
-          grunt.log.error(error)   if error.length
+          grunt.log.error(result)  if result
+          grunt.log.error(error)   if error
           console.log("")
 
           reject(error)
         else
+          if grunt.option('debug')
+            grunt.log.ok(result)  if result
+          
           @last_cmd    = og
           @last_code   = code
           @last_result = result
 
-          setTimeout(
-            -> resolve(result, code)
-            1
-          )
+          resolve(result, code)
     )
 
     promise
@@ -68,7 +68,8 @@ module.exports = (grunt) ->
 
     _.inject(
       _.flatten(cmds)
-      (promise, cmd) -> grunt.util.cmd(cmd)
+      (promise, cmd) ->
+        promise.then(-> grunt.util.cmd(cmd))
       Q.resolve()
     )
 
