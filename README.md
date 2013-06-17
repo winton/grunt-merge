@@ -6,7 +6,7 @@ Grunt task that merges git branches for you.
 
 ###Install
 
-npm install grunt-merge
+    npm install grunt-merge
 
 ###Example Gruntfile
 
