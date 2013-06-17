@@ -86,12 +86,12 @@ describe 'grunt-merge', ->
           'git pull origin a'
           'git checkout a-b'
           'git merge a'
-          'git push a-b'
+          'git push origin a-b'
           'git checkout b'
           'git pull origin b'
           'git checkout a-b'
           'git merge b'
-          'git push a-b'
+          'git push origin a-b'
         ])
 
         grunt.util.cmd.restore()

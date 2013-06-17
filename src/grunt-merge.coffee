@@ -94,7 +94,7 @@ module.exports = (grunt) ->
             grunt.util.cmds(@co_key, "git merge #{branch}")
           ).then(=>
             unless grunt.option('offline')
-              grunt.util.cmd("git push #{key}")
+              grunt.util.cmd("git push origin #{key}")
           )
         promise
       )
