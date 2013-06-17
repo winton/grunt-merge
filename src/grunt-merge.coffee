@@ -84,7 +84,7 @@ module.exports = (grunt) ->
             grunt.util.checkoutCmd(key, value[0])
           ).then((co) =>
             @co_key = co
-            grunt.util.checkoutCmd(branch)
+            grunt.util.checkoutCmd(branch, key)
           ).then((co) =>
             grunt.util.cmds(co)
           ).then(=>
@@ -104,7 +104,7 @@ module.exports = (grunt) ->
       (e) ->
         grunt.util.cmds("git status").then((output) ->
           grunt.log.error(
-            "Please fix the conflict and run `grunt merge` again."
+            "Please resolve error and run `grunt merge` again."
           )
           console.log("\n#{output}")
         )
